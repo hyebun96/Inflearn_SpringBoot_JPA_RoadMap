@@ -13,11 +13,14 @@ public class JpaMain {
 
         try {
 
-            // 영속엔티티의 동일성 보장
-            Member findMember1 = em.find(Member.class, 101L);
-            Member findMember2 = em.find(Member.class, 101L);
+            // 트랜잭을 지원하는 쓰기 지연
+            Member member1 = new Member(150L, "A");
+            Member member2 = new Member(160L, "B");
 
-            System.out.println("result = " + (findMember1 == findMember2));
+            em.persist(member1);
+            em.persist(member2);
+
+            System.out.println("============");
 
             tx.commit();
 
