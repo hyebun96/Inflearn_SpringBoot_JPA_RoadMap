@@ -13,15 +13,14 @@ public class JpaMain {
 
         try {
 
-            // 트랜잭을 지원하는 쓰기 지연
-            Member member1 = new Member(150L, "A");
-            Member member2 = new Member(160L, "B");
+            // 트랜잭션을 지원하는 수정감지 _ 엔티티 수정
+            Member member = em.find(Member.class, 150L);
 
-            em.persist(member1);
-            em.persist(member2);
+            member.setName("update A"); // 자바 컬렉션 다루듯 값만 바꿨는데, 알아서 수정해줌
 
             System.out.println("============");
 
+            // flush 되는 순간에 현 Entity와 스냅샷을 비교하여 다르면 update해줌
             tx.commit();
 
         } catch (Exception e) {
