@@ -13,10 +13,11 @@ public class JpaMain {
 
         try {
 
-            // 조회할때, 영속성 컨텍스트(1차캐시) 부터 찾기 때문에 없으면 DB를 통해 가져와 1차캐시에 저장
+            // 영속엔티티의 동일성 보장
             Member findMember1 = em.find(Member.class, 101L);
-            // 2번째 조회할때 영속성 컨텍스트(1차캐시)에 존재하기 때문에 DB조회하지 않는다.
             Member findMember2 = em.find(Member.class, 101L);
+
+            System.out.println("result = " + (findMember1 == findMember2));
 
             tx.commit();
 
