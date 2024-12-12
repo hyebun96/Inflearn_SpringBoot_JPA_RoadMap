@@ -13,12 +13,13 @@ public class JpaMain {
 
         try {
 
-            // 트랜잭션을 지원하는 수정감지 _ 엔티티 수정
-            Member member = em.find(Member.class, 150L);
+            Member member = new Member(200L, "member200");
+            em.persist(member);
 
-            member.setName("update A"); // 자바 컬렉션 다루듯 값만 바꿨는데, 알아서 수정해줌
+            // 플러시
+            em.flush();
 
-            System.out.println("============");
+            System.out.println("========");
 
             // flush 되는 순간에 현 Entity와 스냅샷을 비교하여 다르면 update해줌
             tx.commit();
