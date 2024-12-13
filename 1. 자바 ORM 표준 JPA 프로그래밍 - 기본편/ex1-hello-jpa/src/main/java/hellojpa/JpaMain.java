@@ -13,20 +13,30 @@ public class JpaMain {
 
         try {
 
-            // 영속
-            Member member = em.find(Member.class, 150L);
-            member.setName("AAAAA");
+            Member member1 = new Member();
+            member1.setUsername("A");
 
-            // detch : 영속성컨텍스트가 더이상 관리하지 않아서 update되지 않음
-            // em.detach(member);
+            Member member2 = new Member();
+            member1.setUsername("B");
 
-            // clear : 영속컨텍스트 전부 지워짐
-            em.clear();
+            Member member3 = new Member();
+            member1.setUsername("C");
 
-            // 다시 초기화되어서 DB에서 값 다시 가져옴
-            Member member1 = em.find(Member.class, 150L);
+            System.out.println("===========");
 
-            System.out.println("========");
+            // DB SEQ = 1   | 1
+            // DB SEQ = 51  | 2
+            // DB SEQ = 51  | 3
+
+            em.persist(member1);    // 영속성 컨텍스트에 넣어주기전에 시퀀스 전략이면 DB 시퀀스 먼저 불러옴
+            em.persist(member2);
+            em.persist(member3);
+
+            System.out.println("member1 = " + member1.getId());
+            System.out.println("member2 = " + member2.getId());
+            System.out.println("member3 = " + member3.getId());
+
+            System.out.println("===========");
 
             tx.commit();
 
