@@ -15,16 +15,9 @@ public class Team {
 
     private String name;
 
-    // 연관관계 주인은 team이다. 조회는 가능하지만 update는 X
-    // 가짜 매핑
+    // 다대일 양방향 - 읽기만 가능
     @OneToMany(mappedBy = "team")
     private List<Member> members = new ArrayList<>();
-
-    public void addMember(Member member) {
-        member.setTeam(this);
-        // 연관관계 편의 메서드
-        members.add(member);
-    }
 
     public Long getId() {
         return id;
@@ -42,11 +35,4 @@ public class Team {
         this.name = name;
     }
 
-    public List<Member> getMembers() {
-        return members;
-    }
-
-    public void setMembers(List<Member> members) {
-        this.members = members;
-    }
 }
