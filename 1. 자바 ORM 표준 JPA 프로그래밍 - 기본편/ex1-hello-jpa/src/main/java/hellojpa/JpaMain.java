@@ -13,30 +13,34 @@ public class JpaMain {
 
         try {
 
-            Member member1 = new Member();
-            member1.setUsername("A");
+            // 저장
+           Team team = new Team();
+           team.setName("TeamA");
+           em.persist(team);        // pk값이 영속상태에 들어감
 
-            Member member2 = new Member();
-            member1.setUsername("B");
+           Member member = new Member();
+           member.setUsername("member1");
+           member.setTeam(team);        // 단방향 연관관계 설정, 참조 저장
+           em.persist(member);
 
-            Member member3 = new Member();
-            member1.setUsername("C");
+           // DB에서 갖고오는거 보고싶으면
+           em.flush();
+           em.clear();
 
-            System.out.println("===========");
+            Member findMember = em.find(Member.class, member.getId());
+            Team findTeam = findMember.getTeam();
 
-            // DB SEQ = 1   | 1
-            // DB SEQ = 51  | 2
-            // DB SEQ = 51  | 3
+            System.out.println("findTeam = " + findTeam.getName());
 
-            em.persist(member1);    // 영속성 컨텍스트에 넣어주기전에 시퀀스 전략이면 DB 시퀀스 먼저 불러옴
-            em.persist(member2);
-            em.persist(member3);
+            // 수정
+            Team team100 = new Team();
+            team.setName("Team100");
+            em.persist(team100);
 
-            System.out.println("member1 = " + member1.getId());
-            System.out.println("member2 = " + member2.getId());
-            System.out.println("member3 = " + member3.getId());
+            Team newTeam = em.find(Team.class, 2L);
+            findMember.setTeam(newTeam);
 
-            System.out.println("===========");
+            System.out.println("findTeam = " + findTeam.getName());
 
             tx.commit();
 
