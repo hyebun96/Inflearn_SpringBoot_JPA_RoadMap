@@ -1,8 +1,8 @@
 package hellojpa;
 
-
 import jakarta.persistence.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -15,8 +15,16 @@ public class Team {
 
     private String name;
 
+    // 연관관계 주인은 team이다. 조회는 가능하지만 update는 X
+    // 가짜 매핑
     @OneToMany(mappedBy = "team")
-    private List<Member> members;
+    private List<Member> members = new ArrayList<>();
+
+    public void addMember(Member member) {
+        member.setTeam(this);
+        // 연관관계 편의 메서드
+        members.add(member);
+    }
 
     public Long getId() {
         return id;
