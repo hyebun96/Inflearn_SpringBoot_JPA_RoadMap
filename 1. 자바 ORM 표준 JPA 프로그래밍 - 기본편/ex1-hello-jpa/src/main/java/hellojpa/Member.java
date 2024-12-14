@@ -13,10 +13,6 @@ public class Member {
     @Column(name = "USERNAME")
     private String username;
 
-    @ManyToOne
-    @JoinColumn(name = "TEAM_ID")
-    private Team team;
-
     public Long getId() {
         return id;
     }
@@ -32,19 +28,4 @@ public class Member {
     public void setUsername(String username) {
         this.username = username;
     }
-
-    public Team getTeam() {
-        return team;
-    }
-
-    public void setTeam(Team team) {
-        this.team = team;
-    }
-
-//    public void changeTeam(Team team) {
-//        this.team = team;
-//        // 연관관계 편의 메서드
-//        // 나 자신을 넣어주면 실수하지 않고, 양쪽에 모두 값을 넣어줌
-//        team.getMembers().add(this);
-//    }
 }

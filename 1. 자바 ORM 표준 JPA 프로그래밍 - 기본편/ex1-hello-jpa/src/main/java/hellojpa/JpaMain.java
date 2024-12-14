@@ -22,7 +22,7 @@ public class JpaMain {
 
            Member member = new Member();
            member.setUsername("member1");
-           member.setTeam(team);        // 단방향 연관관계 설정, 참조 저장
+            // member.setTeam(team);        // 단방향 연관관계 설정, 참조 저장
            em.persist(member);
 
            // DB에서 갖고오는거 보고싶으면
@@ -30,18 +30,18 @@ public class JpaMain {
            em.clear();
 
             Member findMember = em.find(Member.class, member.getId());
-            Team findTeam = findMember.getTeam();
+            // Team findTeam = findMember.getTeam();
 
-            System.out.println("findTeam = " + findTeam.getName());
+            // System.out.println("findTeam = " + findTeam.getName());
 
             // 수정
             Team teamB = new Team();
             teamB.setName("teamB");
             em.persist(teamB);
 
-            findMember.setTeam(teamB);
+            // findMember.setTeam(teamB);
 
-            System.out.println("findTeam = " + findMember.getTeam().getName());
+            //System.out.println("findTeam = " + findMember.getTeam().getName());
 
             // team 양방향으로 찾기
             Team findTeam2 = em.find(Team.class, team.getId());
