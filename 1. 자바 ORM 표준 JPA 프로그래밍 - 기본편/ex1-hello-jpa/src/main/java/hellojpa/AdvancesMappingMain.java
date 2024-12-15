@@ -5,6 +5,8 @@ import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.EntityTransaction;
 import jakarta.persistence.Persistence;
 
+import java.time.LocalDateTime;
+
 public class AdvancesMappingMain {
 
     public static void main(String[] args) {
@@ -28,6 +30,14 @@ public class AdvancesMappingMain {
 
             Movie findMovie = em.find(movie.getClass(), movie.getId());
             System.out.println("findMove = " + findMovie);
+
+            // BaseEntity
+            Member member = new Member();
+            member.setUsername("user1");
+            member.setCreateBy("hye");
+            member.setCreateDate(LocalDateTime.now());
+
+            em.persist(member);
 
             tx.commit();
 
