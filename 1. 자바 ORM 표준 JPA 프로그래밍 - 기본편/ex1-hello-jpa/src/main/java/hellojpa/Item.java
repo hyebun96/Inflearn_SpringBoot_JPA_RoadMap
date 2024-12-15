@@ -3,9 +3,9 @@ package hellojpa;
 import jakarta.persistence.*;
 
 @Entity
-@Inheritance(strategy = InheritanceType.JOINED)
+@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 @DiscriminatorColumn            // DTYPE
-public class Item {
+public abstract class Item {        // 추상클래스로 만들어야함
 
     @Id @GeneratedValue
     private Long id;
