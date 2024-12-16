@@ -75,7 +75,7 @@ public class ProxyMain {
 
 
 
-            // 4.
+            // 4. 더이상 영속성컨텍스트가 관리 안하면
 
             Member refMember = em.getReference(Member.class, member.getId());
             System.out.println("refMember = " + refMember.getClass());    // Proxy
