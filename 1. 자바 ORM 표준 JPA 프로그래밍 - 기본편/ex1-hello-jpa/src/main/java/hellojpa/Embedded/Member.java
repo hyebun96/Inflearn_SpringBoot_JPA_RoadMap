@@ -3,6 +3,11 @@ package hellojpa.Embedded;
 import hellojpa.BaseEntity;
 import jakarta.persistence.*;
 
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
 @Entity(name = "Member2")
 @Table(name = "Member2")
 public class Member extends BaseEntity {
@@ -15,21 +20,21 @@ public class Member extends BaseEntity {
     @Column(name = "USERNAME")
     private String username;
 
-    // 기간
-    private Period period;
-
     // 주소
-    private Address address;
+    @Embedded
+    private Address homeAddress;
+
+    @ElementCollection
+    @CollectionTable(name = "FAVORITE_FOOD", joinColumns = @JoinColumn(name = "MEMBER_ID"))
+    @Column(name = "FOOD_NAME")
+    private Set<String> favoriteFoods = new HashSet<>();
+
+    @ElementCollection
+    @CollectionTable(name = "ADDRESS", joinColumns = @JoinColumn(name = "MEMBER_ID"))
+    private List<Address> addressHistory = new ArrayList<>();
 
     public Member() {
 
-    }
-
-    public Member(Long id, String username, Period period, Address address) {
-        this.id = id;
-        this.username = username;
-        this.period = period;
-        this.address = address;
     }
 
     public Long getId() {
@@ -40,14 +45,6 @@ public class Member extends BaseEntity {
         return username;
     }
 
-    public Period getPeriod() {
-        return period;
-    }
-
-    public Address getAddress() {
-        return address;
-    }
-
     public void setId(Long id) {
         this.id = id;
     }
@@ -56,11 +53,27 @@ public class Member extends BaseEntity {
         this.username = username;
     }
 
-    public void setPeriod(Period period) {
-        this.period = period;
+    public Address getHomeAddress() {
+        return homeAddress;
     }
 
-    public void setAddress(Address address) {
-        this.address = address;
+    public void setHomeAddress(Address homeAddress) {
+        this.homeAddress = homeAddress;
+    }
+
+    public Set<String> getFavoriteFoods() {
+        return favoriteFoods;
+    }
+
+    public void setFavoriteFoods(Set<String> favoriteFoods) {
+        this.favoriteFoods = favoriteFoods;
+    }
+
+    public List<Address> getAddressHistory() {
+        return addressHistory;
+    }
+
+    public void setAddressHistory(List<Address> addressHistory) {
+        this.addressHistory = addressHistory;
     }
 }

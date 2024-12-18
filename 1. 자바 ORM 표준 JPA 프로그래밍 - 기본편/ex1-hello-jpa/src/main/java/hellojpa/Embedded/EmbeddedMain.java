@@ -29,10 +29,10 @@ public class EmbeddedMain {
 
             Address copyAddress = new Address("new city", address.getStreet(), address.getZipcode());
 
-            Member member2 = new Member();
-//            member2.setUsername("member2");
-//            member2.setAddress(copyAddress);
-//            member2.setPeriod(period);
+            Member member1 = new Member();
+//            member1.setUsername("member2");
+//            member1.setAddress(copyAddress);
+//            member1.setPeriod(period);
 
             // 값타입 공유 참조
             // 임베디드 타입 같은 값 타입을 공유하고 있기때문에 member만 바꿔도 member2까지 영향을 줌
@@ -40,7 +40,7 @@ public class EmbeddedMain {
 //            member.getAddress().setCity("new city");
 
             em.persist(member);
-            em.persist(member2);
+            em.persist(member1);
 
 
             em.clear();
@@ -50,19 +50,32 @@ public class EmbeddedMain {
 
 
             // 2. 값 타입과 불변 객체 - Setter 없애고 생성자할때만 값을 셋팅한다.
-            Member member3 = new Member();
+            Member member2 = new Member();
 
             Address address1 = new Address("new city", address.getStreet(), address.getZipcode());
-            member3.setAddress(address1);
+//            member3.setAddress(address1);
 
-            em.persist(member3);
+            em.persist(member2);
 
             em.clear();
             em.flush();
 
 
 
-            
+            // 3. 값타입 컬렉션
+            System.out.println("============ 값타입 컬렉션 ============");
+            Member member3 = new Member();
+            member3.setUsername("member3");
+            member3.setHomeAddress(new Address("homeCity", "street", "10000"));
+
+            member3.getFavoriteFoods().add("치킨");
+            member3.getFavoriteFoods().add("피자");
+            member3.getFavoriteFoods().add("초밥");
+
+            member3.getAddressHistory().add(new Address("old1", "street", "10000"));
+            member3.getAddressHistory().add(new Address("old2", "street", "10000"));
+
+            em.persist(member3);
 
             tx.commit();
 
