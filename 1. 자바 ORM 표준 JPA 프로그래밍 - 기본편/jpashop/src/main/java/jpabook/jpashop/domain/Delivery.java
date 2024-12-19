@@ -10,11 +10,8 @@ public class Delivery extends BaseEntity{
     @Id @GeneratedValue
     private Long id;
 
-    private String city;
-
-    private String street;
-
-    private String zipcode;
+    @Embedded
+    private Address address;
 
     @Enumerated(EnumType.STRING)
     private DeliveryStatus status;
@@ -22,4 +19,11 @@ public class Delivery extends BaseEntity{
     @OneToOne(mappedBy = "delivery", fetch = LAZY)
     private Order order;
 
+    public Address getAddress() {
+        return address;
+    }
+
+    public void setAddress(Address address) {
+        this.address = address;
+    }
 }
