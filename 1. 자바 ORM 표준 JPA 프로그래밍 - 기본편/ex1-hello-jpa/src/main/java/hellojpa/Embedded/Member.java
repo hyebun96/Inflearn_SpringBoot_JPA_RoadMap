@@ -76,4 +76,15 @@ public class Member extends BaseEntity {
     public void setAddressHistory(List<Address> addressHistory) {
         this.addressHistory = addressHistory;
     }
+
+    @Override
+    public String toString() {
+        return "Member{" +
+                "id=" + id +
+                ", username='" + username + '\'' +
+                ", homeAddress=" + homeAddress +
+                ", favoriteFoods=" + favoriteFoods +
+                ", addressHistory=" + addressHistory +
+                '}';
+    }
 }

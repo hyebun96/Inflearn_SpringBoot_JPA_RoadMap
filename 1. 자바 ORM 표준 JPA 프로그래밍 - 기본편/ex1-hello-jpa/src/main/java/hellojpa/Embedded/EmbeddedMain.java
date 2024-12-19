@@ -6,6 +6,8 @@ import jakarta.persistence.EntityTransaction;
 import jakarta.persistence.Persistence;
 
 import java.time.LocalDateTime;
+import java.util.List;
+import java.util.Set;
 
 public class EmbeddedMain {
 
@@ -62,6 +64,7 @@ public class EmbeddedMain {
 
 
 
+
             // 3. 값타입 컬렉션
             System.out.println("============ 값타입 컬렉션 ============");
             Member member3 = new Member();
@@ -77,6 +80,33 @@ public class EmbeddedMain {
 
             em.persist(member3);
 
+            System.out.println(member3.toString());
+            System.out.println(em.find(Member.class, member3.getId()).toString());
+
+            em.flush();
+            em.clear();
+
+
+
+
+            // 값타입 컬렉션은 지연로딩이다!
+            System.out.println("============ 값타입 컬렉션 지연로딩 ============");
+            Member findMember = em.find(Member.class, member3.getId());
+
+            List<Address> addressHistory = findMember.getAddressHistory();
+            for (Address address2 : addressHistory) {
+                System.out.println("address = " + address2.getCity());
+            }
+
+            Set<String> favoriteFoods = findMember.getFavoriteFoods();
+            for (String favoriteFood : favoriteFoods) {
+                System.out.println("favoriteFood = " + favoriteFood);
+            }
+
+            em.flush();
+            em.clear();
+
+            
             tx.commit();
 
         } catch (Exception e) {
