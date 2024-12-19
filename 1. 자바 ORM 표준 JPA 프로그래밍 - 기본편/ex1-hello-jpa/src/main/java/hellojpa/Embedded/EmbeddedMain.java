@@ -75,8 +75,8 @@ public class EmbeddedMain {
             member3.getFavoriteFoods().add("피자");
             member3.getFavoriteFoods().add("초밥");
 
-            member3.getAddressHistory().add(new Address("old1", "street", "10000"));
-            member3.getAddressHistory().add(new Address("old2", "street", "10000"));
+            member3.getAddressHistory().add(new AddressEntity("old1", "street", "10000"));
+            member3.getAddressHistory().add(new AddressEntity("old2", "street", "10000"));
 
             em.persist(member3);
 
@@ -93,9 +93,9 @@ public class EmbeddedMain {
             System.out.println("============ 값타입 컬렉션 지연로딩 ============");
             Member findMember = em.find(Member.class, member3.getId());
 
-            List<Address> addressHistory = findMember.getAddressHistory();
-            for (Address address2 : addressHistory) {
-                System.out.println("address = " + address2.getCity());
+            List<AddressEntity> addressHistory = findMember.getAddressHistory();
+            for (AddressEntity address2 : addressHistory) {
+                System.out.println("address = " + address2.getAddress().getCity());
             }
 
             Set<String> favoriteFoods = findMember.getFavoriteFoods();
@@ -123,8 +123,8 @@ public class EmbeddedMain {
             findMember4.getFavoriteFoods().add("한식");
 
             // 컬렉션 수정
-            findMember4.getAddressHistory().remove(new Address("old1", "street", "10000"));
-            findMember4.getAddressHistory().add(new Address("newCity", "street", "10000"));
+            findMember4.getAddressHistory().remove(new AddressEntity("old1", "street", "10000"));
+            findMember4.getAddressHistory().add(new AddressEntity("newCity", "street", "10000"));
 
 
 
