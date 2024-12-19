@@ -106,7 +106,28 @@ public class EmbeddedMain {
             em.flush();
             em.clear();
 
-            
+
+
+
+            // 4. 값타입 컬렉션 수정
+            // 영속성 전이처럼 값타입 컬렉션 값만 변경해도 실제 DB Query 날라감
+            System.out.println("============ 값타입 컬렉션 수정 ============");
+            Member findMember4 = em.find(Member.class, member3.getId());
+
+            // homeCity -> newCity
+            Address a = findMember.getHomeAddress();
+            findMember4.setHomeAddress(new Address("newCity", a.getStreet(), a.getZipcode()));
+
+            // 치킨 -> 한식
+            findMember4.getFavoriteFoods().remove("치킨");
+            findMember4.getFavoriteFoods().add("한식");
+
+            // 컬렉션 수정
+            findMember4.getAddressHistory().remove(new Address("old1", "street", "10000"));
+            findMember4.getAddressHistory().add(new Address("newCity", "street", "10000"));
+
+
+
             tx.commit();
 
         } catch (Exception e) {
