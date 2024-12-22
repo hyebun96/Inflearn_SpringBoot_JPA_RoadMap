@@ -83,7 +83,7 @@ public class JpaMainFetchJoin {
 
 
             // 컬렉션 fetch join
-            // distinct 추가하지 않아도 hibernate 6에서 중복제거
+            // distinct 추가하지 않아도 hibernate 6에서 중복제거됨
             System.out.println("================= 컬렉션 fetch join =================");
             String query3 = "select t from Team t join fetch t.members";
             List<Team> result3 = em.createQuery(query3, Team.class).getResultList();
@@ -92,6 +92,31 @@ public class JpaMainFetchJoin {
                 System.out.println("team = " + team.getName() + ", " + team.getMembers());
             }
 
+            em.flush();
+            em.clear();
+
+
+
+
+            // 패치조인의 한계
+            // fetch join 은 별칭을 사용할 수 없음. -> 가급적 사용하지 X
+            // fetch join 은 페이징을 할 수 없음.
+
+            // fetch join을 하지 않아도, 아래와 같은 방법을 사용하면 LAZY가아닌 즉시로딩 할 수 있음
+            // 1.Team.java에서 @BatchSize(size = 100)
+            // 2. persistence.xml에 설정해주면 페이징하고 member 가 올 수 있음
+            System.out.println("================= fetch join 한계 =================");
+            String query4 = "select t from Team t";
+            List<Team> result4 = em.createQuery(query4, Team.class)
+                                    .setFirstResult(0)
+                                    .setMaxResults(2)
+                                    .getResultList();
+
+            System.out.println("size = " + result4.size());
+
+            for (Team team : result4) {
+                System.out.println("team = " + team.getName() + ", " + team.getMembers());
+            }
 
             tx.commit();
 
