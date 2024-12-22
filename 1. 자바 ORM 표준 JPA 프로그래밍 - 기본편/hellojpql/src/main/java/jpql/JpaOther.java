@@ -42,6 +42,25 @@ public class JpaOther {
             em.clear();
 
 
+            // 벌크연산
+            // 모든 회원의 나이를 20살로 변경한크다면
+
+            // [문제] 벌크연산 주의! -> 영속성컨텍스트를 거치지 않고 바로 DB에 들어간다
+            // [해결방법1] 벌크연산을 선수행
+            // [해결방법2] 연산후, 영속성컨텍스트 초기화
+            System.out.println("================= 벌크연산 =================");
+            int resultCount = em.createQuery("update Member m set m.age = 20")
+                    .executeUpdate();
+
+            System.out.println("resultCount = " + resultCount);
+
+            Member findMember3 = em.find(Member.class, member1.getId());
+            System.out.println("findMember3의 나이" + findMember3.getAge());
+
+            // FLUSH 호출 -> commit, query, flush
+            // FLUSH는 영속성 컨텍스트의 값을 DB에 반영하는것.
+
+
 
             // 엔티티 값 직접사용, id값 사용과 SQL은 동일
             System.out.println("================= 엔티티값 직접사용 =================");
@@ -91,6 +110,8 @@ public class JpaOther {
 
             System.out.println("findMember = " + findMember);
 
+            em.flush();
+            em.clear();
 
             tx.commit();
 
