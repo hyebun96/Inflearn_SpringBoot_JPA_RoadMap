@@ -82,6 +82,16 @@ public class JpaOther {
             em.flush();
             em.clear();
 
+
+
+            // Named 쿼리 - 어노테이션 : 쿼리 재 활용
+            Member findMember = em.createNamedQuery("Member.findByUsername", Member.class)
+                    .setParameter("username", "회원1")
+                    .getSingleResult();
+
+            System.out.println("findMember = " + findMember);
+
+
             tx.commit();
 
         } catch (Exception e) {
