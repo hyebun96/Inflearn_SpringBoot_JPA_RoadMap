@@ -4,17 +4,16 @@ import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.PersistenceUnit;
 import jpabook.jpashop.domain.Member;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
 
 @Repository
+@RequiredArgsConstructor
 public class MemberRepository {
 
-    // Spring EntityManager 주입해줌
-    // Spring EntityFactoryManager은 @PersistenceUnit - 거의 쓸일 X
-    @PersistenceContext
-    private EntityManager em;
+    private final EntityManager em;
 
     public Long save(Member member) {
         em.persist(member);
