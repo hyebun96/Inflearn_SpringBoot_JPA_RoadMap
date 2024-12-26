@@ -3,7 +3,6 @@ package jpabook.jpashop.service;
 import jpabook.jpashop.domain.Member;
 import jpabook.jpashop.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -28,7 +27,7 @@ public class MemberService {
         // 멀티스레드 동시성 문제 해결을 위해서는 member.name을 unique 잡길 권장
         List<Member> findMembers = memberRepository.findByName(member.getName());
         if(!findMembers.isEmpty()) {
-            throw new IllegalArgumentException("이미 존재하는 회원입니다.");
+            throw new IllegalStateException("이미 존재하는 회원입니다.");
         }
     }
 
