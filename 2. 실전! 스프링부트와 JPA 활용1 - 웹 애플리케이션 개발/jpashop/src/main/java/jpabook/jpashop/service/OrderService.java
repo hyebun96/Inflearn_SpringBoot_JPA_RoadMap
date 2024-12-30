@@ -43,7 +43,7 @@ public class OrderService {
         // 주문 생성
         Order order = Order.createOrder(member, delivery, orderItem);
 
-         //주문 저장
+        //주문 저장
         // orderItem, delivery 가 자동을 persist ? Order에서 두 값을 CASCADE 했기 때문
         orderRepository.save(order);
 
@@ -63,6 +63,6 @@ public class OrderService {
 
     // 검색
     public List<Order> findOrder(OrderSearch orderSearch){
-        return orderRepository.findAll(orderSearch);
+        return orderRepository.findAllByCriteria(orderSearch);
     }
 }
