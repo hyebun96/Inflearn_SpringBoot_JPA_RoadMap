@@ -65,15 +65,17 @@ public class ItemController {
     public String updateItem( @PathVariable("itemId") Long itemId, @ModelAttribute("form")BookForm form) {
 
         // 사용자 권한을 확인하고 하는 것을 권장
-        Book book = new Book();
-        book.setId(form.getId());
-        book.setName(form.getName());
-        book.setPrice(form.getPrice());
-        book.setStockQuantity(form.getStockQuantity());
-        book.setAuthor(form.getAuthor());
-        book.setIsbn(form.getIsbn());
+//        Book book = new Book();
+//        book.setId(form.getId());
+//        book.setName(form.getName());
+//        book.setPrice(form.getPrice());
+//        book.setStockQuantity(form.getStockQuantity());
+//        book.setAuthor(form.getAuthor());
+//        book.setIsbn(form.getIsbn());
+//        itemService.saveItem(book);
 
-        itemService.saveItem(book);
+        itemService.updateItem(itemId, form.getPrice(), form.getStockQuantity());
+
         return "redirect:/items";
     }
 }
