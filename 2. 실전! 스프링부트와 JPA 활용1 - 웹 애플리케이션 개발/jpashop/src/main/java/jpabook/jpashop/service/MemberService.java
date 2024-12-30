@@ -31,7 +31,7 @@ public class MemberService {
         }
     }
 
-    public List<Member> findMember() {
+    public List<Member> findMembers() {
         return memberRepository.findAll();
     }
 
