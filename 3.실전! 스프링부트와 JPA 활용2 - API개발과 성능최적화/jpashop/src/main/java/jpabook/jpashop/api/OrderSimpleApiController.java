@@ -37,7 +37,7 @@ public class OrderSimpleApiController {
         return all;
     }
 
-    /* 주문조회 - 엔티티를 DTO로 변환 */
+    /* 주문조회 - 엔티티를 DTO로 변환 -> N+1 문제 발생 */
     @GetMapping("/api/v2/simple-orders")
     public List<SimpleOrderDto> orderV2() {
         // ORDER 2개
@@ -47,6 +47,16 @@ public class OrderSimpleApiController {
         return orders.stream()
                     .map(SimpleOrderDto::new)
                     .collect(Collectors.toList());
+    }
+
+    /* 주문조회 - 엔티티를 DTO로 변환 - 페치 조인 최적화 */
+    @GetMapping("/api/v3/simple-orders")
+    public List<SimpleOrderDto> orderV3() {
+        List<Order> orders = orderRepository.findAllWithMemberDelivery(new OrderSearch());
+
+        return orders.stream()
+                .map(SimpleOrderDto::new)
+                .collect(Collectors.toList());
     }
 
     @Data
