@@ -27,7 +27,7 @@ class MemberServiceTest {
         Long savedId = memberService.join(member);
 
         // Then
-        assertEquals(member, memberRepository.find(savedId));
+        assertEquals(member, memberRepository.findOne(savedId));
     }
 
     @Test
