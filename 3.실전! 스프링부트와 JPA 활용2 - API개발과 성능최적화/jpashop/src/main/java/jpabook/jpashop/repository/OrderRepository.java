@@ -108,7 +108,19 @@ public class OrderRepository {
         return em.createQuery(
                 "select o from Order o" +
                         " join fetch o.member m" +
-                        " join fetch o.delivery d", Order.class)
+                        " join fetch o.delivery d", Order.class).getResultList();
+    }
+
+    /* SpringBoot 3.x 자동 distinct 처리
+       단점 -> 페이징 처리 안됨 */
+    public List<Order> findAllWithItem() {
+        return em.createQuery("select o from Order o " +
+                " join fetch o.member m" +
+                " join fetch o.delivery d" +
+                " join fetch o.orderItems oi" +
+                " join fetch oi.item i", Order.class)
+                .setFirstResult(1)
+                .setMaxResults(1)
                 .getResultList();
     }
 }
