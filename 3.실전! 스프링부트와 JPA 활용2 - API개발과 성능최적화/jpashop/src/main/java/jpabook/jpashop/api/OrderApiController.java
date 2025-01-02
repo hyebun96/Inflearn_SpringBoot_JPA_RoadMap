@@ -76,6 +76,12 @@ public class OrderApiController {
         return orderQueryRepository.findOrderQueryDtos();
     }
 
+    /* 주문 조회 - JPA에서 DTO 직접조회(컬렉션 조회 최적화) */
+    @GetMapping("/api/v5/orders")
+    public List<OrderQueryDto> ordersV5() {
+        return orderQueryRepository.findAllByDto_optimization();
+    }
+
     @Getter
     static class OrderDto {
 
