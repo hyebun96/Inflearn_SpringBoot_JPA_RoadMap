@@ -103,11 +103,12 @@ public class OrderRepository {
         return query.getResultList();
     }
 
-    public List<Order> findAllWithMemberDelivery(OrderSearch orderSearch) {
+    /*  장점 -> 공용으로 갖고 다른 곳에서 다른 용도 사용할 수 있음, 성능에 제일 좋음(권장) */
+    public List<Order> findAllWithMemberDelivery() {
         return em.createQuery(
                 "select o from Order o" +
-                            " join fetch o.member m" +
-                            " join fetch o.delivery d", Order.class)
+                        " join fetch o.member m" +
+                        " join fetch o.delivery d", Order.class)
                 .getResultList();
     }
 }
