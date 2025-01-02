@@ -7,12 +7,14 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.BatchSize;
 
 import static jakarta.persistence.FetchType.LAZY;
 
 @Entity
 @Getter @Setter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)  // 생성자 protected 사용해 new 하지 못하게 막음 -> 생성메서드 사용하라는 의미
+@BatchSize(size = 10)
 public class OrderItem {
 
     @Id @GeneratedValue

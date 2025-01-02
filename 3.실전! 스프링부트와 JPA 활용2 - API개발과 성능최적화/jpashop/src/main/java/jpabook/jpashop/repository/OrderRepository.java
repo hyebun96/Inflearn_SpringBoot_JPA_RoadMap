@@ -111,6 +111,16 @@ public class OrderRepository {
                         " join fetch o.delivery d", Order.class).getResultList();
     }
 
+    public List<Order> findAllWithMemberDelivery(int offset, int limit) {
+        return em.createQuery(
+                "select o from Order o" +
+                        " join fetch o.member m" +
+                        " join fetch o.delivery d", Order.class)
+                .setFirstResult(offset)
+                .setMaxResults(limit)
+                .getResultList();
+    }
+
     /* SpringBoot 3.x 자동 distinct 처리
        단점 -> 페이징 처리 안됨 */
     public List<Order> findAllWithItem() {
