@@ -15,6 +15,7 @@ spring:
         hbm2ddl:
           auto: create
         default_batch_fetch_size: 100
+    open-in-view: false
 
 logging:
   level:

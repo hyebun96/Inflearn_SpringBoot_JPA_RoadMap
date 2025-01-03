@@ -29,9 +29,12 @@ public class OrderQueryRepository {
     public List<OrderQueryDto> findAllByDto_optimization() {
         List<OrderQueryDto> result = findOrders();
 
+        // orderId 가져옴
         List<Long> orderIds = toOrderId(result);
+        // in orderId 이용해 orderItem 모두 가져옴
         Map<Long, List<OrderItemQueryDto>> orderItemMap = findOrderItemMap(orderIds);
 
+        // orderId에 맞는 orderItem을 넣어줌
         result.forEach(o -> o.setOrderItems(orderItemMap.get(o.getOrderId())));
         return result;
     }
