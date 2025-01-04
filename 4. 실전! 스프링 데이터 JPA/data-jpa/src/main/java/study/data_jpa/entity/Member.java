@@ -36,7 +36,7 @@ public class Member {
         if(team != null){
             changeTeam(team);
         } else {
-            new NoSuchElementException("팀이 존재하지 않습니다.");
+            NoSuchElementException noSuchElementException = new NoSuchElementException("팀이 존재하지 않습니다.");
         }
     }
 
