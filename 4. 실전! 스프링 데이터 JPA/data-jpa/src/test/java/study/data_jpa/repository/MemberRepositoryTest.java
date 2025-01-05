@@ -10,6 +10,7 @@ import study.data_jpa.entity.Team;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -157,5 +158,22 @@ class MemberRepositoryTest {
         assertThat(usernameList.get(1)).isEqualTo(m2);
         assertThat(usernameList.get(0).getUsername()).isEqualTo("AAA");
         assertThat(usernameList.get(1).getUsername()).isEqualTo("BBB");
+    }
+
+    @Test
+    public void returnType() {
+        Member m1 = new Member("AAA", 10);
+        Member m2 = new Member("BBB", 20);
+        memberRepository.save(m1);
+        memberRepository.save(m2);
+
+        List<Member> usernameList = memberRepository.findListByUsername("AAA");     // 값이 없는 경우 empty 반환
+        Member findMember = memberRepository.findMemberByUsername("AAA");            // 값이 없는 경우 null 반환
+        Optional<Member> optionalMember = memberRepository.findOptionalByUsername("AAA");   // 값이 없는 경우 empty 반환
+
+        assertThat(usernameList.size()).isEqualTo(1);
+        assertThat(usernameList.get(0)).isEqualTo(m1);
+        assertThat(findMember).isEqualTo(m1);
+        assertThat(optionalMember.get()).isEqualTo(m1);
     }
 }
