@@ -4,6 +4,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import study.data_jpa.dto.MemberDto;
@@ -15,31 +16,44 @@ import java.util.Optional;
 
 public interface MemberRepository extends JpaRepository<Member, Long> {
 
+    /* 메소드 이름으로 쿼리 생성 */
     List<Member> findByUsernameAndAgeGreaterThan(String username, int age);
 
     List<Member> findHelloBy();
 
+
+    /* NamedQuery */
     @Query(name = "Member.findByUsername")
     List<Member> findByUsername(@Param("username") String username);
 
+
+    /* @query, 리포지토리 메소드에 쿼리 정의하기 */
     @Query("select m from Member m where m.username = :username and m.age = :age")
     List<Member> findUser(@Param("username") String username, @Param("age") int age);
 
+
+    /* @query, 값, DTO 조회하기 */
     @Query("select m.username from Member m")
     List<String> findByUsernameList();
 
     @Query("select new study.data_jpa.dto.MemberDto(m.id, m.username, t.name) from Member m join m.team t")
     List<MemberDto> findMemberDto();
 
+
+    /* 파라미터 바인딩(이름기반) */
     @Query("select m from Member m where m.username in :names")
     List<Member> findByNames(@Param("names") Collection<String> names);
 
+
+    /* 반환 기능 (컬렉션, 단건, 단건 Optional) */
     List<Member> findListByUsername(String username);   // 컬렉션
 
     Member findMemberByUsername(String username);   // 단건
 
     Optional<Member> findOptionalByUsername(String username);   // 단건 Optional
 
+
+    /* 스프링 테이터 JPA 페이징, 정렬 */
     Page<Member> findByAge(int age, Pageable pageable);
 
     @Query(value = "select m from Member m left join m.team t",
@@ -47,4 +61,12 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
     Page<Member> findCountByAge(int age, Pageable pageable);
 
     Slice<Member> findSliceByAge(int age, Pageable pageable);
+
+
+    /* 벌크성 수정 쿼리 */
+    @Modifying(clearAutomatically = true)
+    @Query("update Member m set m.age = m.age * 10 where m.age >= :age")
+    int bulkAgePlus(@Param("age") int age);
+
+
 }

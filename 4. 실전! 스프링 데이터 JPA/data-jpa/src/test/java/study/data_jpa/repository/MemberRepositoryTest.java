@@ -1,5 +1,7 @@
 package study.data_jpa.repository;
 
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -7,6 +9,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Slice;
 import org.springframework.data.domain.Sort;
+import org.springframework.test.annotation.Rollback;
 import org.springframework.transaction.annotation.Transactional;
 import study.data_jpa.dto.MemberDto;
 import study.data_jpa.entity.Member;
@@ -20,13 +23,13 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
 @Transactional
+@Rollback(value = false)
 class MemberRepositoryTest {
 
-    @Autowired
-    MemberRepository memberRepository;
+    @Autowired MemberRepository memberRepository;
+    @Autowired TeamRepository teamRepository;
+    @PersistenceContext EntityManager em;
 
-    @Autowired
-    TeamRepository teamRepository;
 
     @Test
     void testMember() {
@@ -224,5 +227,26 @@ class MemberRepositoryTest {
         assertThat(page.hasNext()).isTrue();                          // 다음 페이지 있는지
 
         assertThat(slicePage.hasNext()).isTrue();
+    }
+
+    @Test
+    public void bulkUpdate() {
+        // Given
+        memberRepository.save(new Member("member1", 10));
+        memberRepository.save(new Member("member2", 19));
+        memberRepository.save(new Member("member3", 20));
+        memberRepository.save(new Member("member4", 21));
+        memberRepository.save(new Member("member5", 33));
+
+        // When
+        int resultCount = memberRepository.bulkAgePlus(20);
+//        em.flush(); // 영속성 컨텍스트를 날려버림. DB에서 값을 갖고옴
+//        em.clear();
+
+        Member member = memberRepository.findByUsername("member5").get(0);
+        System.out.println(member); // em.flush(), em.clear() 없다면 영속성 컨텍스트에 남아있는 값으로 출력하기 때문에 반영이 안되기 전 값으로 나옴
+
+        // Then
+        assertThat(resultCount).isEqualTo(3);
     }
 }
