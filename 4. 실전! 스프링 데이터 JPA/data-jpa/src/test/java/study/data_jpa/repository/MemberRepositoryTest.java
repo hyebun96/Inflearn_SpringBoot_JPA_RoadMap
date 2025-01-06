@@ -3,6 +3,10 @@ package study.data_jpa.repository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Slice;
+import org.springframework.data.domain.Sort;
 import org.springframework.transaction.annotation.Transactional;
 import study.data_jpa.dto.MemberDto;
 import study.data_jpa.entity.Member;
@@ -175,5 +179,50 @@ class MemberRepositoryTest {
         assertThat(usernameList.get(0)).isEqualTo(m1);
         assertThat(findMember).isEqualTo(m1);
         assertThat(optionalMember.get()).isEqualTo(m1);
+    }
+
+    @Test
+    public void paging() {
+        // Given
+        Team teamA = teamRepository.save(new Team("teamA"));
+        memberRepository.save(new Member("member1", 10, teamA));
+        memberRepository.save(new Member("member2", 10, teamA));
+        memberRepository.save(new Member("member3", 10, teamA));
+        memberRepository.save(new Member("member4", 10, teamA));
+        memberRepository.save(new Member("member5", 10, teamA));
+
+        // 인터페이스 만으로 페이징 가능
+        // SpringJPA 는 페이지 0번부터 시작함
+        int age = 10;
+        PageRequest pageRequest = PageRequest.of(0, 3, Sort.by(Sort.Direction.DESC, "username"));
+
+        // When
+        System.out.println("---> paging <---");
+        Page<Member> page = memberRepository.findByAge(age, pageRequest);
+
+        // slice는 totalCount안나오고 +1 하나해서 있는지만 봄
+        System.out.println("---> slice: totalPage 안나옴 <---");
+        Slice<Member> slicePage = memberRepository.findSliceByAge(age, pageRequest);
+
+        // count는 join할 필요가 없으니 처리
+        System.out.println("---> count: totalPage join 안하고 <---");
+        Page<Member> count = memberRepository.findCountByAge(age, pageRequest);
+
+        System.out.println("--->  Page<Member> -> Page<MemberDto> <---");
+        Page<MemberDto> toMap = page.map(m -> new MemberDto(m.getId(), m.getUsername(), m.getTeam().getName()));
+        System.out.println(toMap.getTotalPages());
+
+        // Then
+        List<Member> content = page.getContent();
+
+        assertThat(content.size()).isEqualTo(3);            // find Elements 개수
+        assertThat(content.get(0).getAge()).isEqualTo(10);  //Elements(0) 번 조회
+        assertThat(page.getNumber()).isEqualTo(0);          // 현재 페이지 번호
+        assertThat(page.getTotalElements()).isEqualTo(5L);  // 전체 Elements 개수
+        assertThat(page.getTotalPages()).isEqualTo(2);      // 전체 페이지 수
+        assertThat(page.isFirst()).isTrue();                          // 현재 슬라이스가 첫페이지 인지
+        assertThat(page.hasNext()).isTrue();                          // 다음 페이지 있는지
+
+        assertThat(slicePage.hasNext()).isTrue();
     }
 }
