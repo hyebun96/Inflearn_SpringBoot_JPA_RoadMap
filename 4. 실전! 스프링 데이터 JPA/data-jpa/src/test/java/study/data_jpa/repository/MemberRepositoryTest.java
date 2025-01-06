@@ -289,4 +289,30 @@ class MemberRepositoryTest {
         // Then
         assertThat(memberFetchJoin.size()).isEqualTo(2);
     }
+
+    @Test
+    public void queryHint() {
+        // Given
+        Member member1 = memberRepository.save(new Member("member1", 10));
+        em.flush();
+        em.clear();
+
+        // When
+        Member findMember = memberRepository.findReadOnlyByUsername(member1.getUsername());
+        findMember.setUsername("member2");
+        findMember.setAge(200);
+
+        em.flush(); // Update Query 실행X, 내부적으로 스냅샷을 만들지 않음(읽기로만 최적화)
+    }
+
+    @Test
+    public void lock() {
+        // Given
+        Member member1 = memberRepository.save(new Member("member1", 10));
+        em.flush();
+        em.clear();
+
+        // When
+        List<Member> findMember = memberRepository.findLockByUsername(member1.getUsername());
+    }
 }
