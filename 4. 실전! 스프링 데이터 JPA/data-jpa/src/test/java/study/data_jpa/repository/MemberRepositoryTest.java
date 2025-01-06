@@ -29,6 +29,7 @@ class MemberRepositoryTest {
     @Autowired MemberRepository memberRepository;
     @Autowired TeamRepository teamRepository;
     @PersistenceContext EntityManager em;
+    @Autowired MemberQueryRepository memberQueryRepository;
 
 
     @Test
@@ -314,5 +315,11 @@ class MemberRepositoryTest {
 
         // When
         List<Member> findMember = memberRepository.findLockByUsername(member1.getUsername());
+    }
+    
+    @Test
+    public void callCustom() {
+        List<Member> memberCustom = memberRepository.findMemberCustom();
+        List<Member> allMembers = memberQueryRepository.findAllMembers();
     }
 }
