@@ -249,4 +249,44 @@ class MemberRepositoryTest {
         // Then
         assertThat(resultCount).isEqualTo(3);
     }
+
+    /* Fetch */
+    @Test
+    public void findMemberLazy() {
+        // Given
+        // member1 -> teamA
+        // member2 -> teamB
+
+        Team teamA = new Team("teamA");
+        Team teamB = new Team("teamB");
+        teamRepository.save(teamA);
+        teamRepository.save(teamB);
+        Member member1 = new Member("member1", 10, teamA);
+        Member member2 = new Member("member2", 10, teamB);
+        memberRepository.save(member1);
+        memberRepository.save(member2);
+
+        em.flush();
+        em.clear();
+
+        // When
+        // select Member, N+1 문제 발생
+        List<Member> members = memberRepository.findEntityGraphByUsername("member1");  // @EntityGraph로 fetch 하면 됨
+        for (Member member : members) {
+            System.out.println("member = " + member.getUsername());
+            System.out.println("member.teamClass = " + member.getTeam().getClass());   // Team은 아직 빈 프록시로 들고 있는 상태
+            System.out.println("member = " + member.getTeam().getName());               // select Member
+        }
+
+        System.out.println("----> fetch join <----");
+        List<Member> memberFetchJoin = memberRepository.findMemberFetchJoin();           // 연관관계까지 한번에 불러옴
+        for (Member member : memberFetchJoin) {
+            System.out.println("member = " + member.getUsername());
+            System.out.println("member.teamClass = " + member.getTeam().getClass());    // 진짜 Entity
+            System.out.println("member = " + member.getTeam().getName());
+        }
+
+        // Then
+        assertThat(memberFetchJoin.size()).isEqualTo(2);
+    }
 }
