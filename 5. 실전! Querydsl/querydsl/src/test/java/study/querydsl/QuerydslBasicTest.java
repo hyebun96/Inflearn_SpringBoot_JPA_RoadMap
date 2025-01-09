@@ -8,10 +8,10 @@ import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 import study.querydsl.entity.Member;
-import study.querydsl.entity.QMember;
 import study.querydsl.entity.Team;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static study.querydsl.entity.QMember.member;
 
 @SpringBootTest
 @Transactional
@@ -54,11 +54,9 @@ public class QuerydslBasicTest {
     @Test
     public void startQuerydsl() {
         // member1 을 찾아라.
-        QMember m = new QMember("m");
-
-        Member findMember = jpaQueryFactory.select(m)
-                                          .from(m)
-                                          .where(m.username.eq("member1"))  // querydsl 파라미터 바인딩을 자동으로 해줌
+        Member findMember = jpaQueryFactory.select(member)
+                                          .from(member)
+                                          .where(member.username.eq("member1"))  // querydsl 파라미터 바인딩을 자동으로 해줌
                                           .fetchOne();
 
         assertThat(findMember.getUsername()).isEqualTo("member1");
