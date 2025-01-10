@@ -129,4 +129,26 @@ public class QuerydslBasicTest {
         assertThat(member6.getUsername()).isEqualTo("member6");
         assertThat(memberNull.getUsername()).isNull();
     }
+
+    @Test
+    public void paging() {
+        List<Member> result = jpaQueryFactory.selectFrom(member)
+                                            .orderBy(member.username.desc())
+                                            .offset(1)
+                                            .limit(2)
+                                            .fetch();
+
+        assertThat(result.size()).isEqualTo(2);
+    }
+
+    @Test
+    public void count() {
+        Long totalCount = jpaQueryFactory
+                //.select(Wildcard.count) //select count(*)
+                .select(member.count()) //select count(member.id)
+                .from(member)
+                .fetchOne();
+
+        System.out.println("totalCount = " + totalCount);
+    }
 }
